@@ -11,9 +11,7 @@ def insertion_sort(arr):
         arr[j + 1] = key
     return arr
 
+
 def test_insertion_sort():
     sorted_arr = [2, 4, 4, 5, 13, 345, 451, 561]
-    assert insertion_sort([345, 4, 4,  5, 2, 561, 451, 13]) == sorted_arr
-
-
-
+    assert insertion_sort([345, 4, 4, 5, 2, 561, 451, 13]) == sorted_arr
