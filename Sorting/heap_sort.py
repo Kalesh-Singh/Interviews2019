@@ -23,10 +23,11 @@ def test_heap_sort():
 
 def heap_sort_py(arr):
     sorted_arr = []
-    heapify(arr)    # min heap
+    heapify(arr)  # min heap
     while arr:
         sorted_arr.append(heappop(arr))
     return sorted_arr
+
 
 def test_heap_sort_py():
     sorted_arr = [2, 4, 4, 5, 13, 345, 451, 561]
