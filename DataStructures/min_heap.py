@@ -40,7 +40,7 @@ class MinHeap(object):
         if i < 0 or i >= len(self):
             raise ValueError
         left = (2 * i) + 1
-        if left >= len(self.arr):
+        if left >= len(self):
             return None
         return left
 
