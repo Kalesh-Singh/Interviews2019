@@ -1,10 +1,11 @@
 class MinHeap(object):
     def __init__(self, arr):
         self.arr = arr
+        self.size = len(arr)
         self._build_min_heap()
 
     def __len__(self):
-        return len(self.arr)
+        return self.size
 
     def __getitem__(self, key):
         return self.arr[key]
