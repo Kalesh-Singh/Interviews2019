@@ -16,6 +16,9 @@ class MaxHeap(object):
     def __str__(self):
         return str(self.arr)
 
+    def __contains__(self, item):
+        return item in self.arr
+
     # Another way to implement the iterator
     # def __iter__(self):
     #     self.i = 0
@@ -52,7 +55,7 @@ class MaxHeap(object):
             return None
         return right
 
-    def _parent(self, i):
+    def parent(self, i):
         if i < 0 or i >= len(self):
             raise ValueError
         return i // 2
