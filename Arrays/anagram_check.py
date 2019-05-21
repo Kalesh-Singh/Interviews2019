@@ -1,8 +1,8 @@
-import collections
+from collections import Counter
 
 
 def anagram(s1, s2):
-    count = collections.Counter(s1)
+    count = Counter(s1)
     count.subtract(s2)
 
     return sum(count.values()) == 0

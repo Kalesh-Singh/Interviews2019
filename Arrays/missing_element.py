@@ -1,8 +1,8 @@
-import collections
+from collections import Counter
 
 
 def missing_element(arr1, arr2):
-    counter = collections.Counter(arr1)
+    counter = Counter(arr1)
     counter.subtract(arr2)
     return [x for x, count in counter.items() if count == 1][0]
 
