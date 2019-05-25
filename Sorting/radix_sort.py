@@ -4,7 +4,7 @@ def _radix_counting_sort(arr, base, digit):
     for x in arr:
         # digit starts at [0 ... digits-1]
         d = (x // (base ** digit)) % base
-        (counts[d]).append(x)
+        counts[d].append(x)
     return [item for sublist in counts for item in sublist]
 
 
