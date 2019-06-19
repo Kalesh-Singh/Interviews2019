@@ -55,7 +55,7 @@ class MinHeap(object):
     def _parent(self, i):
         if i < 0 or i >= len(self):
             raise ValueError
-        return i // 2
+        return (i - 1) // 2
 
     def _min_heapify_rec(self, i):
         """
