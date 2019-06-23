@@ -20,6 +20,9 @@ class Solution:
                 elif token == '*':
                     stack.append(x * y)
                 else:
+                    # Note: Be careful with the division
+                    # 5 // 10 = 0
+                    # 5 // -10 = - 1
                     stack.append(int(x / y))
 
         return stack[0]
