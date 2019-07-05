@@ -1,45 +1,76 @@
-# TODO: Needs fixing
+from collections import deque
 
-class TreeNode:
+
+# Definition for a binary tree node.
+class TreeNode(object):
     def __init__(self, x):
         self.val = x
-        self.left = self.right = None
+        self.left = None
+        self.right = None
 
 
-def level_order(node, serial):
-    if node:
-        serial.append(str(node.val))
-        level_order(node.left, serial)
-        level_order(node.right, serial)
-    else:
-        serial.append('null')
+class Codec:
+    # Solution 1 - Level Order (BFS)
+    def serialize(self, root):
+        """Encodes a tree to a single string.
 
+        :type root: TreeNode
+        :rtype: str
+        """
 
-def helper(data, i=0):
-    if data[i] == 'null':
-        return None
-    root = TreeNode(int(data[i]))
-    root.left = helper(data, i + 1)
-    root.right = helper(data, i + 1)
-    return root
+        if not root:
+            return ''
 
+        queue = deque()
+        queue.append(root)
+        result = []
 
-def serialize(root):
-    """Encodes a tree to a single string.
+        while queue:
+            node = queue.popleft()
+            if node:
+                queue.append(node.left)
+                queue.append(node.right)
+                result.append(str(node.val))
+            else:
+                result.append('null')
 
-    :type root: TreeNode
-    :rtype: str
-    """
-    serial = []
-    level_order(root, serial)
-    return ','.join(serial)
+        return ','.join(result)
 
+    def deserialize(self, data):
+        """Decodes your encoded data to tree.
 
-def deserialize(data):
-    """Decodes your encoded data to tree.
+        :type data: str
+        :rtype: TreeNode
+        """
 
-    :type data: str
-    :rtype: TreeNode
-    """
-    serialized_tree = data.split(',')
-    return helper(serialized_tree)
+        if data == '':
+            return None
+
+        vals = data.split(',')
+
+        root = TreeNode(int(vals[0]))
+        queue = deque()
+        queue.append(root)
+
+        i = 1
+        n = len(vals)
+        while i < n:
+            node = queue.popleft()
+            val = vals[i]
+            if val == 'null':
+                node.left = None
+            else:
+                node.left = TreeNode(int(val))
+                queue.append(node.left)
+            i += 1
+
+            if i < n:
+                val = vals[i]
+                if val == 'null':
+                    node.right = None
+                else:
+                    node.right = TreeNode(int(val))
+                    queue.append(node.right)
+            i += 1
+
+        return root
