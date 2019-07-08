@@ -18,6 +18,8 @@ Graph class
 from collections import defaultdict
 
 
+# TODO: Not correct
+
 def addEdgesHelper(words, graph):
     curr = 0
     while curr < len(words) - 1:
