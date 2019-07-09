@@ -15,34 +15,50 @@ Graph class
  topologicalSort()
     rtype: List[char]
 """
-from collections import defaultdict
+from collections import defaultdict, deque
 
 
-# TODO: Not correct
+class Graph(object):
+    def __init__(self, num_vertices):
+        self.num_vertices = num_vertices
+        self.graph = defaultdict(set)
 
-def addEdgesHelper(words, graph):
-    curr = 0
-    while curr < len(words) - 1:
-        if words[curr][0] != words[curr + 1][0]:
-            graph.addEdge(ord(words[curr][0]) - ord('a'), ord(words[curr + 1][0]) - ord('a'))
+    def add_edge(self, start_vertex, end_vertex):
+        self.graph[start_vertex].add(end_vertex)
+
+    def _dfs(self, start_node, visited, sorted_list):
+        visited.add(start_node)
+        if start_node in self.graph:
+            for neighbor in self.graph[start_node]:
+                if neighbor not in visited:
+                    self._dfs(neighbor, visited, sorted_list)
+        sorted_list.appendleft(start_node)
+
+    def topological_sort(self):
+        visited, sorted_list = set(), deque()
+        for node in self.graph:
+            if node not in visited:
+                self._dfs(node, visited, sorted_list)
+        return list(sorted_list)
 
 
-def addEdges(words, graph):
-    addEdgesHelper(words, graph)
-    groups = getGroups(words)
-    for group in groups:
-        addEdges(group, graph)
-
-
-def getGroups(words):
-    groups = defaultdict(list)
-    for word in group:
-        if len(word[1:]) > 0:
-            newGroups[word[0]].append(word[1:])
-    return groups.values()
-
-
-def printOrder(words, alpha):
+def print_order(words, alpha):
+    # Build the graph
     graph = Graph(alpha)
-    addEdges(words, graph)
-    return graph.topologicalSort()
+    for i in range(len(words) - 1):
+        # For every pair of adjacent words
+        word1, word2 = words[i], words[i + 1]
+        for start, end in zip(word1, word2):
+            # Add edge for first pair of mismatched characters
+            if start != end:
+                graph.add_edge(start, end)
+                break
+
+    print(graph.graph)
+    # Do a topological sort
+    return graph.topological_sort()
+
+
+def test_print_order():
+    assert print_order(['caa', 'aaa', 'aab'], 3) == ['c', 'a', 'b']
+    assert print_order(['baa', 'abcd', 'abca', 'cab', 'cad'], 4) == ['b', 'd', 'a', 'c']
