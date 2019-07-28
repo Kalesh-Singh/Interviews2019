@@ -1,76 +1,53 @@
-from heapq import heappush, heappop, heapify
 from collections import Counter
+from heapq import heapify, heappush, heappop
 
 
-class Task(object):
-    def __init__(self, name, freq):
-        self.name = name
-        self.freq = freq
-
-    def __lt__(self, other):
-        # Intended to use python's min heap as a max heap
-        return self.freq > other.freq
-
-
-# TODO: Fix - Missing an edge case (Off by 1 error on leetcode)
 class Solution:
     def leastInterval(self, tasks: 'List[str]', n: int) -> int:
-        # Get number of tasks
-        num_tasks = len(tasks)
+        # Solution 1 - Sorting
+        #         counts = Counter(tasks)
+        #         counts = sorted(counts.values(), reverse=True)
 
-        # Get cool down time
-        cool_down_time = n
+        #         time = 0
 
-        # Get idle cycles
-        idle_cycles = 0
+        #         while counts[0] > 0:
+        #             for i in range(n+1):
+        #                 # Restart cool down time, since there is no more of that task
+        #                 if counts[0] == 0:
+        #                     break
+        #                 if i < len(counts) and counts[i] > 0:
+        #                     counts[i] -= 1
+        #                 time += 1
+        #             counts.sort(reverse=True)
+        #         return time
 
-        # Get count of tasks        O(n)
-        tasks = Counter(tasks)
+        # Solution 2 - Max Heap
+        #         counts = [-x for x in Counter(tasks).values()]
+        #         heapify(counts)
 
-        # Use a max heap to keep track of the task remaining
-        # by frequency.             O(nlogn)
-        remaining_tasks = [Task(name, freq) for name, freq in tasks.items()]
-        heapify(remaining_tasks)
+        #         time = 0
+        #         while counts:
+        #             temp = []
+        #             for i in range(n+1):
+        #                 if counts:
+        #                     if counts[0] < -1:
+        #                         temp.append(heappop(counts)+1)
+        #                     else:
+        #                         heappop(counts)
+        #                 time += 1
+        #                 if not counts and not temp:
+        #                     break
+        #             for count in temp:
+        #                 heappush(counts, count)
+        #         return time
 
-        # Keep track of the tasks that are in cool down
-        cool_down_tasks = {}  # name, cool_down
+        # Solution 3 - Calculating the idle slots
+        counts = sorted(Counter(tasks).values(), reverse=True)
 
-        popped_tasks = []
+        max_val = counts[0] - 1
+        idle_slots = max_val * n
 
-        while popped_tasks or remaining_tasks:
-            # Decrease the cool down time
-            still_cooling_tasks = {}
-            for task in cool_down_tasks:
-                cool_down_tasks[task] -= 1
-                if cool_down_tasks[task] >= 0:
-                    still_cooling_tasks[task] = cool_down_tasks[task]
-            cool_down_tasks = still_cooling_tasks
+        for i in range(1, len(counts)):
+            idle_slots -= min(counts[i], max_val)
 
-            # Add all popped tasks back to remaining task
-            popped_tasks = Counter(popped_tasks)
-            for name, freq in popped_tasks.items():
-                heappush(remaining_tasks, Task(name, freq))
-            popped_tasks = []
-
-            # Pop from the max heap until we find a task
-            # that is not being cooled down
-            while remaining_tasks:
-                next_task = heappop(remaining_tasks)
-                if next_task.name in cool_down_tasks:
-                    popped_tasks.append(next_task.name)
-                    if next_task.freq > 1:
-                        heappush(remaining_tasks, Task(next_task.name, next_task.freq - 1))
-                else:
-                    cool_down_tasks[next_task.name] = cool_down_time
-                    print(next_task.name, end=' ')
-                    if next_task.freq > 1:
-                        heappush(remaining_tasks, Task(next_task.name, next_task.freq - 1))
-                    break
-
-            # If heap becomes empty we have to use an idle cycle
-            # -> increment counter.
-            if len(remaining_tasks) == 0 and len(popped_tasks) > 0:
-                print('idle', end=' ')
-                idle_cycles += 1
-        print()
-        return num_tasks + idle_cycles
+        return idle_slots + len(tasks) if idle_slots > 0 else len(tasks)
