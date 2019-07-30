@@ -43,16 +43,8 @@ class Solution:
         # C U W D
         # > 26
 
-        # Appears recursive in nature
-        # P(s) = P(s[1:]) + P(s[[2:]]) if int(s[:2]) <= 26 else P(s[1:])
+        # We can use a recursive approach
 
-        # Base Cases
-        # 1 digit --> 1 if  digit != 0 else 0
-        # 2 digits --> 1 if > 26 else 2
-
-        # Similar to Fibonnaci Sequence only 2 previous terms required
-
-        # TODO:
         # Figure out the edge cases with zeros
         # "01"
         # 0
@@ -75,25 +67,45 @@ class Solution:
         # 0 is only valid when preceded by a 2 or 1
         # i.e 10 and 20
 
-        n = len(s)
+        # Any string with 0 at the beginning cannot be represented
+        # i.e 0 ways
 
-        if n == 1:
-            n_2 = 0 if int(s[n - 1]) == 0 else 1  # n-2 term
+        # Appears recursive in nature
+
+        # Base Cases
+        # 0 digits --> 1
+        # 1 digit --> 1 if  digit != 0 else 0
+
+        # Recursive Case
+
+        # P(s, i) - # of ways to decode s[i:]
+
+        # P(s, i) = 0 if s[i] == '0' else (
+        #       P(s, i+1) + P(s, i+2) if int(s[i] + s[i+1]) <= 26 else P(s, i+1) )
+
+        # Similar to Fibonacci Sequence only 2 previous terms required
+
+        # Base Cases
+        # 0 Digits
+        n_2 = 1
+        if not s:
             return n_2
-        elif n == 2:
-            n_2 = 0 if int(s[n - 1]) == 0 else 1  # n-2 term
-            n_1 = n_2 + 1 if 0 < int(s[n - 2:]) <= 26 else n_2  # n-1 term
+
+        # 1 Digit
+        n = len(s)
+        n_1 = 1 if s[n - 1] != '0' else 0
+        if n == 1:
             return n_1
 
-        n_2 = 0 if int(s[n - 1]) == 0 else 1  # n-2 term
-        n_1 = n_2 + 1 if 0 < int(s[n - 2:]) <= 26 else n_2  # n-1 term
-
-        for i in range(n - 3, -1, -1):
-            if 0 < int(s[i:i + 2]) <= 26:
-                res = n_1 + n_2
+        # Recursive Case
+        for i in range(n - 2, -1, -1):
+            if s[i] == '0':
+                res = 0
             else:
-                res = n_1
-
+                if int(s[i:i + 2]) <= 26:
+                    res = n_1 + n_2
+                else:
+                    res = n_1
             n_1, n_2 = res, n_1
 
         return res
