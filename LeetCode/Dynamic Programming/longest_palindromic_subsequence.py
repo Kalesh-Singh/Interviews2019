@@ -296,6 +296,39 @@ class Solution:
         #   dp[i][j] = max(dp[i][j-1]  # Including start char and excluding end char
         #                   dp[i+1][j] # Excluding start char and excluding end char
 
+        # Solution 1 - Dynamic Programming Approach
+        # Create Table
+        # dp = [[0 for _ in s] for _ in s]
+
+        # n = len(s)
+
+        # # Fill in the main diagonal
+        # for i in range(n):
+        #     dp[i][i] = 1
+
+        # # Fill in the diagonals above the main diagonal
+        # for k in range(1, n):
+        #     for i in range(n-k):
+        #         j = i + k
+        #         if s[i] == s[j]:
+        #             if j - i == 1:      # 2 chars
+        #                 dp[i][j] = 2
+        #             elif j - i == 2:    # 3 chars
+        #                 dp[i][j] = 3
+        #             else:
+        #                 dp[i][j] = 2 + dp[i+1][j-1]
+        #         else:
+        #             # Max of these:
+        #             # Including start char and excluding end char
+        #             # Excluding start char and excluding end char
+        #             dp[i][j] = max(dp[i][j-1], dp[i+1][j])
+
+        # return dp[0][n-1]
+
+        # Solution 2 - Revision of Solution 1
+        # We make if work with just 1 base case
+        # 0 initializing the table is important.
+
         # Create Table
         dp = [[0 for _ in s] for _ in s]
 
@@ -310,12 +343,7 @@ class Solution:
             for i in range(n - k):
                 j = i + k
                 if s[i] == s[j]:
-                    if j - i == 1:  # 2 chars
-                        dp[i][j] = 2
-                    elif j - i == 2:  # 3 chars
-                        dp[i][j] = 3
-                    else:
-                        dp[i][j] = 2 + dp[i + 1][j - 1]
+                    dp[i][j] = 2 + dp[i + 1][j - 1]
                 else:
                     # Max of these:
                     # Including start char and excluding end char
