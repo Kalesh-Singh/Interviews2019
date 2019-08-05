@@ -21,7 +21,7 @@ class Solution:
         # NOTE: This is just an extension of
         # Kadane's Algorithm.
 
-        global_max = curr_max = prev_max = prev_min = nums[0]
+        global_max = prev_max = prev_min = nums[0]
 
         for i in range(1, len(nums)):
             curr_max = max(nums[i] * prev_min, nums[i] * prev_max, nums[i])
